@@ -1,0 +1,122 @@
+Watchkit Introduction With Swift
+
+
+##What Is Watchkit
+
+Watchkit is Apple's framework that allows you to create apps for the iWatch.  Watchkit based apps can be created completely in Xcode using Swift or Objective-C.  
+
+If you have written iOS apps, then the process of creating a Watch app will be fairly familiar.  Watchkit apps still use storyboards.  They're controller UIs can connect with a controller class for writing custom code.  But there are some differences, between the two, which we'll look at below.
+
+##Architecture Of A Watchkit App
+
+Watchkit apps are structured differently in Xcode compared to iOS apps.  There are also a few restrictions in regards to what you can do with the UI.  Interface Builder is a good guide when it comes to UI restrictions.  It will help keep you within the bounds of what should be done for a Watchkit app UI.
+
+Watchkit apps don't run stand alone.  At least not yet.  That may be coming this fall (2015).  Currently Apple requires any watch app to be associated to an iOS app, basically making the watch app and extension of an iOS app.
+
+There are two main parts to a watch app: the extension and the app.  The app is what gets pushed to the iWatch.  While the extension remains on the iPhone, as part of the iOS app package.  
+
+![enter image description here](http://www.bitesizebschool.com/images/sitepoint/watchkit/communication_key.png)
+
+The extension is the work horse of the watch app.  It is where all of the business logic lives.  Because the extension is part of the iOS app, this means the iPhone must be present in order for a watch app to run.
+
+The watch app side is basically just UI.  It displays UI elements and sends back any interactions from the user.  It also receives interactions from the extension.  The UI changes based on both types of interactions.
+
+This split between the watch extension and watch app helps to save battery life on the iWatch.  You might be asking, how does the watch app communicate with the watch extension on the iPhone.  The answer is bluetooth.  
+
+The iPhone checks if an iWatch is available.  If so, any apps that have an associated watch app can then push their watch app to the iWatch.
+
+##Glances and Notifications
+
+####Glances
+
+Watchkit has a new feature not found in iOS apps called glances.  Glances are read only for the user and appear at certain intervals are based on something happening in your app.  They display summary information for the user.   Glances are meant to be read in a matter of seconds.
+
+![enter image description here](http://www.bitesizebschool.com/images/sitepoint/watchkit/glances_2x.png)
+[Image source: apple.com]
+
+Glances have very limited customization in Storyboard.  In fact, they are template based  These templates can't be modified.  
+
+There are two areas that you can customize for glances.  These are called Upper and Lower, as shown below from the Attributes Inspector.
+
+![enter image description here](http://www.bitesizebschool.com/images/sitepoint/watchkit/Interface_storyboard.png)
+
+Clicking one of these will reveal the available templates:
+
+![enter image description here](http://www.bitesizebschool.com/images/sitepoint/watchkit/Interface_storyboard_and_StackEdit_Editor.png)
+
+####Notifications
+
+![enter image description here](http://www.bitesizebschool.com/images/sitepoint/watchkit/notifications_2x.png)
+[Image source: apple.com]
+
+Notifications are similar to those already availble in iOS apps.  In fact, if your iOS app sends notifications now, you don't even need a Watchkit app for those to be sent to the iWatch.  These will be supported automatically.  But without a Watch app, you can't customize your notifications.
+
+Notifications work with a file in your project called PushNotificationPayload.apns.  This file is formatted in JSON.  It's where you set the notification title, body, button text and more.
+
+Notifications are available in two flavors - static and dynamic.  
+
+Static notifications are the default.  These notifications will appear if there is no associated Watch app.  In the case that there is an associated Watch app, static notifications might still be used in place of dynamic notifications if there is a problem getting dynamic notifications to appear.
+
+Static notifications have restrictions on what you can do with the UI layout.  While not as restrictive as glances, you still can't add buttons through the storyboard.
+
+![enter image description here](http://www.bitesizebschool.com/images/sitepoint/watchkit/shortlook_calendar_2x.png)
+[Image source: apple.com]
+
+Dynamic notifications do offer a little more UI customization and allow for more user interactivity. 
+
+![enter image description here](http://www.bitesizebschool.com/images/sitepoint/watchkit/longlook_calendar_2x.png)
+[Image source: apple.com]
+
+##What Does It Look Like In Xcode?
+
+If you have an existing iOS app and want to add an Watch app, in Xcode you'll click the plus in the project and target pane.  Then choose Watchkit App under the iOS section.
+
+![enter image description here](http://www.bitesizebschool.com/images/sitepoint/watchkit/WatchAppSample_xcodeproj.png)
+
+Next, you'll want to check Notification and Glance Scenes if you are wanting those options.  Notifications are selected by default.
+
+![enter image description here](http://www.bitesizebschool.com/images/sitepoint/watchkit/Screenshot_5_10_15__12_45_PM.png)
+
+The next screen will be a popup asking you to accept the new Watchkit scheme.  Click the Activate button to accept.
+
+![enter image description here](http://www.bitesizebschool.com/images/sitepoint/watchkit/Screenshot_5_10_15__12_47_PM.png)
+
+You now have all the code needed to start a Watchkit app.  You'll notice several new folders in Xcode.  These include:
+
+ - Tests folder for your Watchkit app 
+ - X Watchkit Extension 
+ - X Watchkit App
+
+Where "X" is your iOS app name.  We'll focus on the last two folders - Watchkit Extension and Watchkit App.  In the screenshot below, you can see all three new folders.
+
+![enter image description here](http://www.bitesizebschool.com/images/sitepoint/watchkit/WatchAppSample_xcodeproj_and_StackEdit_Editor.png)
+
+In this project, the name of the iOS app is WatchAppSample.  The Watchkit extension and app have inherited this name as well.
+
+We know the extension is where all of the business logic resides.  Specifically, your custom code will go in the InterfaceController.swift file.
+
+Notice the notifications and glance UI objects in the storyboard.
+
+![enter image description here](http://www.bitesizebschool.com/images/sitepoint/watchkit/Interface_storyboard_Edited.png)
+
+You can see that Static notifications are first, followed by Dynamic notifications.  This ensure static notification take precedence and can be used as a fall back.
+
+##iOS App vs Watchkit App
+
+Here's a quick look at some framework comparison's between an iOS app and Watchkit App:
+
+![enter image description here](http://www.bitesizebschool.com/images/sitepoint/watchkit/ios_vs_watchkit.png)
+
+As you can see, there are many similarities allowing for great knowledge transfer from iOS app creation to Watchkit app creation.  Names have changed but the concepts remain the same.
+
+Groups are new to Watchkit.  These are used in the storyboard.  UI elements in Watchkit must be within a group so the watch understands how to lay them out using horizontal or vertical rules.
+
+##What Gets Deployed To The App Store?
+
+When you deploy your Watchkit app to the App Store, you are still deploying an iOS app.  Watchkit code is packaged up into the iOS app package.  Once on the iPhone, if an iWatch is detected, your Watchkit app is then deployed to the iWatch via Bluetooth.
+
+##Summary
+
+There isn't a big learning curve for developing Watchkit apps if your already familiar with developing iOS apps.  Apple has done a good job to keep things familiar.  Getting use to differences in Interface Builder will take a little time, but again, there isn't a big learning curve. 
+
+I hope you have enjoyed this introduction to Watchkit.
